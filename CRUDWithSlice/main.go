@@ -24,11 +24,12 @@ func create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	users = append(users, user)
-
+	w.Header().Set("contant-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
 
 func getAllUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("contant-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
 
