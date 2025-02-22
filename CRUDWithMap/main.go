@@ -32,6 +32,17 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(users)
 }
 
+func getUserById(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	value, found := users[id]
+	if !found {
+		http.Error(w, "user not found", http.StatusBadRequest)
+		return
+	}
+	w.Header().Set("contant-Type", "application/json")
+	json.NewEncoder(w).Encode(value)
+}
+
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var user user
 	id := r.URL.Query().Get("id")
@@ -57,11 +68,25 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func deleteUser(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+
+	_, found := users[id]
+	if !found {
+		http.Error(w, "user not found", http.StatusNotFound)
+		return
+	}
+	delete(users, id)
+	w.WriteHeader(http.StatusNoContent)
+}
+
 func main() {
 	// http.Handle("/create", http.HandlerFunc(createUser)) //Correct use of HandlerFunc
 	http.HandleFunc("/create", createUser)
 	http.HandleFunc("/getAll", getUsers)
+	http.HandleFunc("/get", getUserById)
 	http.HandleFunc("/update", UpdateUser)
+	http.HandleFunc("/delete", deleteUser)
 	fmt.Println("Server running on port 8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
