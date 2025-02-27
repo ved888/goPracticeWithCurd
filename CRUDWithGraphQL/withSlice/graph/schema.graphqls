@@ -8,6 +8,12 @@ type User {
   address: String!
 }
 
+input UserInput {
+  id: String!
+  name: String!
+  address: String!
+}
+
 type Query {
   users: [User!]!
   user(id: ID!): User
@@ -19,7 +25,8 @@ input DeleteUser {
 
 type Mutation {
   createUser(id:String!,name: String!, address: String!): User!
-  UpdateUser(id:String!,name:String!,address:String!):User!
+  createUsers(user:UserInput!):User!
+  updateUser(id:String!,name:String!,address:String!):User!
   removeUser(input: DeleteUser!): User!
 }
 
